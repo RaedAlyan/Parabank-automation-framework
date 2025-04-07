@@ -1,2 +1,23 @@
-# Parabank-automation-framework
-A Selenium-Python automation framework for testing a demo banking application. Implements end-to-end workflows using the Page Object Model (POM), pytest, and CI/CD integration.
+# ParaBank Automation Framework
+A Selenium-Python test automation framework for ParaBank, implementing best practices in test automation.
+
+## Features
+- 📝 **Structured Logging**: Automatic log file creation with timestamped entries
+- ⚙️ **Config-Driven**: JSON configuration for easy environment setup
+- 🧩 **Modular Design**: Reusable components with clear separation of concerns
+- ✅ **PEP8 Compliance**: Enforced through Ruff linter
+
+## Getting Started
+
+### Installation
+```bash
+
+# Clone repository
+git clone https://github.com/RaedAlyan/Parabank-automation-framework.git
+```
+
+### Install dependencies
+```bash
+
+pip install -r requirements.txt
+```
