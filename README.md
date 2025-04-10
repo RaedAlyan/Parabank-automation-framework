@@ -6,6 +6,7 @@ A Selenium-Python test automation framework for ParaBank, implementing best prac
 - ⚙️ **Config-Driven**: JSON configuration for easy environment setup
 - 🧩 **Modular Design**: Reusable components with clear separation of concerns
 - ✅ **PEP8 Compliance**: Enforced through Ruff linter
+- 🌐 **Cross-Browser Support**: Chrome, Firefox, and Edge
 
 ## Getting Started
 
