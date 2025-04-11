@@ -69,3 +69,7 @@ class Logger:
     def warning(self, message: str) -> None:
         """Log a warning-level message."""
         self.logger.warning(message)
+
+    def critical(self, message):
+        """Log a critical message."""
+        self.logger.critical(message)
