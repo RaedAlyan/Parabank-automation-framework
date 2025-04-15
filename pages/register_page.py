@@ -1,11 +1,12 @@
 """
+Register page class for the ParaBank automation framework
 
 @author: Raed Eleyan
 @date: 04/15/2025
 @contact: raedeleyan1@gmail.com
 """
 from selenium.webdriver.common.by import By
-from base_page import BasePage
+from .base_page import BasePage
 from utils.logger import Logger
 
 
