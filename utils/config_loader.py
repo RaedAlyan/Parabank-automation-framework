@@ -9,15 +9,15 @@ environment parameters, and framework configurations.
 @contact: raedeleyan1@gmail.com
 """
 import json
+import logging
 from pathlib import Path
-from logger import Logger
 
 
 class ConfigLoader:
     """Utility class for loading and managing framework configuration files."""
 
     def __init__(self, config_path: str = '../config/config.json'):
-        self.logger = Logger(__name__)
+        self.logger = logging.Logger(__name__)
         self.config_path = Path(config_path).resolve()
         self.config = self._load_config()
 
