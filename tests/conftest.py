@@ -15,7 +15,7 @@ sys.path.append(str(root_path))
 
 from utils.logger import Logger
 from utils.webdriver_initializer import WebDriverInitializer
-
+from utils.data_generator import *
 
 logger = Logger(__name__)
 
@@ -33,5 +33,25 @@ def browser(request) -> WebDriver:
     except Exception as e:
         logger.error(f'Failed to initialize WebDriver. Error: {e}')
     finally:
-        logger.info(f"\n{'='*50}\nStarting Teardown Phase\n{'='*50}")
-        driver.quit()
+        if driver is not None:
+            logger.info(f"\n{'='*50}\nStarting Teardown Phase\n{'='*50}")
+            driver.quit()
+
+
+@pytest.fixture()
+def register_data() -> dict:
+    """Fixture that generates a dictionary of fake registration data."""
+    password = generate_password()
+    return {
+        "first_name": generate_first_name(),
+        "last_name": generate_last_name(),
+        "address": generate_address(),
+        "city": generate_city(),
+        "state": generate_state(),
+        "zip_code": generate_zipcode(),
+        "phone": generate_phone_number(),
+        "ssn": generate_ssn(),
+        "username": generate_username(),
+        "password": password,
+        "confirm_password": password
+    }
