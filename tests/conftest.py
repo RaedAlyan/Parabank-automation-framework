@@ -28,8 +28,7 @@ def browser(request) -> WebDriver:
         logger.info(f"\n{'='*50}\nStarting Setup Phase\n{'='*50}")
         driver = WebDriverInitializer().initialize_webdriver()
         driver.maximize_window()
-        request.cls.driver = driver
-        yield
+        yield driver
     except Exception as e:
         logger.error(f'Failed to initialize WebDriver. Error: {e}')
     finally:
@@ -38,7 +37,7 @@ def browser(request) -> WebDriver:
             driver.quit()
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def register_data() -> dict:
     """Fixture that generates a dictionary of fake registration data."""
     password = generate_password()
