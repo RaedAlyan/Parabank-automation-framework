@@ -6,9 +6,11 @@ Pytest configuration and fixtures for ParaBank automation framework
 @contact: raedeleyan1@gmail.com
 """
 import sys
+import os
 import pytest
 from pathlib import Path
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.common.exceptions import WebDriverException
 
 root_path = Path(__file__).parent.parent
 sys.path.append(str(root_path))
@@ -54,3 +56,29 @@ def register_data() -> dict:
         "password": password,
         "confirm_password": password
     }
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """Pytest hook to handle test reports."""
+    outcome = yield
+    report = outcome.get_result()
+    if report.when == 'call' and report.failed:
+        driver = item.funcargs.get('browser')
+        if driver is not None:
+            screenshots_dir = '../screenshots'
+            os.makedirs(screenshots_dir, exist_ok=True)
+            screenshot_path = os.path.join(screenshots_dir, f'{item.name}.png')
+            try:
+                driver.save_screenshot(screenshot_path)
+                logger.info(f'Saved screenshot: {screenshot_path}')
+            except WebDriverException as e:
+                logger.error(f'Failed to save screenshot: {e}')
+                raise WebDriverException('An error occurred while saving a screenshot')
+            # attach to HTML report
+            plugin = item.config.pluginmanager.getplugin("html")
+            if plugin:
+                extra = getattr(report, 'extra', [])
+                html = (f'<div><img src="{screenshot_path}" alt="screenshot" style="width:300px;" '
+                        f'onclick="window.open(this.src)" /></div>')
+                extra.append(plugin.extras.html(html))
+                report.extra = extra
