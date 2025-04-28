@@ -26,7 +26,7 @@ class Logger:
                 name = __name__
         self.logger = logging.getLogger(name)
         self.logger.setLevel(log_level)
-        self.log_dir = Path('../logs')
+        self.log_dir = Path('logs')
         self._configure_handlers()
 
     def _configure_handlers(self) -> None:

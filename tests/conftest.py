@@ -65,7 +65,7 @@ def pytest_runtest_makereport(item, call):
     if report.when == 'call' and report.failed:
         driver = item.funcargs.get('browser')
         if driver is not None:
-            screenshots_dir = '../screenshots'
+            screenshots_dir = 'screenshots'
             os.makedirs(screenshots_dir, exist_ok=True)
             screenshot_path = os.path.join(screenshots_dir, f'{item.name}.png')
             try:
@@ -81,4 +81,4 @@ def pytest_runtest_makereport(item, call):
                 html = (f'<div><img src="{screenshot_path}" alt="screenshot" style="width:300px;" '
                         f'onclick="window.open(this.src)" /></div>')
                 extra.append(plugin.extras.html(html))
-                report.extra = extra
+                report.extras = extra
