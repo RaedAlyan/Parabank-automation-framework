@@ -18,21 +18,22 @@ from .config_loader import ConfigLoader
 
 
 class WebDriverInitializer:
-    """Handles WebDriver initialization"""
+    """Handles WebDriver initialization for supported browsers"""
 
     SUPPORTED_BROWSERS = ["chrome", "firefox", "edge"]
 
     def __init__(self):
         self.logger = Logger(__name__)
         self.config = ConfigLoader()
-        self.browser = self.config.get_specified_browser().lower()
+        self.browser = self.config.get_specified_browser()
         self._validate_browser()
         self.driver = None
 
     def _validate_browser(self):
-        """Validate browser against supported list"""
+        """Validate specified browser against the supported list"""
         if self.browser not in self.SUPPORTED_BROWSERS:
-            raise ValueError(f'Unsupported browser: {self.browser}. Use: {self.SUPPORTED_BROWSERS}')
+            self.logger.error(f'Unsupported browser: {self.browser}')
+            raise ValueError(f'Unsupported browser: {self.browser}. Supported browsers are: {self.SUPPORTED_BROWSERS}')
 
     def initialize_webdriver(self):
         """
@@ -43,14 +44,37 @@ class WebDriverInitializer:
         """
         try:
             self.logger.info(f'Initializing {self.browser.capitalize()} WebDriver...')
+            options = self._get_browser_options()
             if self.browser == 'chrome':
-                self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+                service = ChromeService(ChromeDriverManager().install())
+                self.driver = webdriver.Chrome(service=service, options=options)
             elif self.browser == 'firefox':
-                self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+                service = FirefoxService(GeckoDriverManager().install())
+                self.driver = webdriver.Firefox(service=service, options=options)
             elif self.browser == 'edge':
-                self.driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
+                service = EdgeService(EdgeChromiumDriverManager().install())
+                self.driver = webdriver.Edge(service=service, options=options)
             self.logger.info(f'{self.browser.capitalize()} WebDriver initialized successfully')
             return self.driver
         except WebDriverException as e:
             self.logger.error('WebDriver initialization failed!')
             raise WebDriverException('An error occurred while initializing the webdriver!') from e
+
+    def _get_browser_options(self):
+        """
+        Returns the appropriate Options object populated with arguments based on browser settings.
+
+        :return: Options object.
+        """
+        options = None
+        if self.browser == 'chrome':
+            options = webdriver.ChromeOptions()
+        elif self.browser == 'firefox':
+            options = webdriver.FirefoxOptions()
+        elif self.browser == 'edge':
+            options = webdriver.EdgeOptions()
+        browser_options: list = self.config.get_browser_options(browser_name=self.browser).get('browser_options')
+        self.logger.info(f'Applying this browser options "{browser_options}" to {self.browser.capitalize()} WebDriver')
+        for option in browser_options:
+            options.add_argument(option)
+        return options
