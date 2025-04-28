@@ -1,3 +1,12 @@
 {
-  "browser": "chrome"
+  "browser": "chrome",
+  "chrome": {
+    "browser_options": ["--incognito", "headless"]
+  },
+  "firefox": {
+    "browser_options": ["-private", "-headless"]
+  },
+  "edge": {
+    "browser_options": ["--headless=new", "--inprivate"]
+  }
 }
