@@ -17,7 +17,7 @@ class ConfigLoader:
     """Utility class for loading and managing framework configuration files."""
 
     def __init__(self, config_path: str = 'config/config.json'):
-        self.logger = logging.Logger(__name__)
+        self.logger = logging.getLogger(__name__)
         self.config_path = Path(config_path).resolve()
         self.config = self._load_config()
 
@@ -31,16 +31,16 @@ class ConfigLoader:
         """
         try:
             self.logger.info(f'Loading configuration from {self.config_path}')
-            with open(self.config_path) as f:
-                config = json.load(f)
-            self.logger.info(f'Loaded configuration from {self.config_path} successfully')
+            with open(self.config_path) as file:
+                config = json.load(file)
+            self.logger.info('Configurations loaded successfully')
             return config
         except FileNotFoundError as e:
             self.logger.error(f'Configuration file not found at {self.config_path}')
-            raise e
+            raise FileNotFoundError(f'Configuration file could not be found. Error: {e}') from e
         except json.JSONDecodeError as e:
             self.logger.error(f'Invalid JSON format in the configuration file')
-            raise e
+            raise json.JSONDecodeError(f'Invalid JSON format: {e.msg}', e.doc, e.pos)
 
     def get_specified_browser(self) -> str:
         """
@@ -48,14 +48,26 @@ class ConfigLoader:
 
         :return: The specified browser name.
         :raises ValueError: If no browser is specified.
-        :raises KeyError: If 'browser' key is missing in configuration file.
         """
-        try:
-            specified_browser = self.config.get('browser')
-            if specified_browser is None:
-                raise ValueError('No browser specified in the configuration file')
-            self.logger.info(f'The specified browser is: {specified_browser}')
-            return specified_browser
-        except KeyError:
-            self.logger.error("Missing 'browser' key in the configuration file")
-            raise KeyError("Required 'browser' key missing in the configuration file")
+        specified_browser = self.config.get('browser')
+        if specified_browser is None:
+            raise ValueError('No browser specified in the configuration file')
+        self.logger.info(f'The specified browser is: {specified_browser}')
+        return specified_browser.lower()
+
+    def get_browser_options(self, browser_name: str) -> dict:
+        """
+        Retrieves the specified browser options
+
+        :param browser_name: The name of the specified browser.
+        :return: The specified browser options.
+        :raises ValueError: If no configuration is found for the specified browser.
+        """
+        self.logger.info('Retrieving the browser options from configuration file')
+        browser_options = self.config.get(browser_name)
+        if browser_options is None:
+            self.logger.error('Browser options aren\'t found in the configuration file for this browser: '
+                              f'{browser_name}')
+            raise ValueError(f'No specified options found for this browser: {browser_name}')
+        self.logger.info(f'The specified options for this browser "{browser_name}" are: {browser_options}')
+        return browser_options
