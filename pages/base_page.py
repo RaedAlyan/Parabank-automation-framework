@@ -13,6 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, ElementNotInteractableException, WebDriverException, \
     NoAlertPresentException
+from selenium.webdriver.common.by import By
 from utils.logger import Logger
 
 root_path = Path(__file__).parent.parent
@@ -21,6 +22,8 @@ sys.path.append(str(root_path))
 
 class BasePage:
     """Base class for all page objects in the framework"""
+
+    WELCOME_TITLE: tuple[str, str] = (By.CSS_SELECTOR, 'h1[class="title"]')
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
@@ -254,3 +257,35 @@ class BasePage:
         except WebDriverException as e:
             self.logger.critical('An error occurred while trying to send text to the prompt alert.')
             raise WebDriverException('Failed to send text to prompt alert.') from e
+
+    def fill_form_fields(self, user_data: dict, locators_mapper: dict) -> None:
+        """
+        Fills form fields with values from the user_data using the provided locators mapper.
+
+        :param user_data: A dictionary containing user input values.
+        :param locators_mapper: A dictionary mapping field names to their corresponding locators.
+        :raises Exception: when an error occurs while trying to fill form fields.
+        """
+        try:
+            for field, locator in locators_mapper.items():
+                if field in user_data:
+                    value = user_data[field]
+                    field_label = field.replace("_", " ")
+                    if field in ['password', 'confirm_password']:
+                        self.logger.info(f'Sending the {field_label} to the form')
+                    else:
+                        self.logger.info(f'Sending the {field_label} "{value}" to the form')
+                    self.send_keys(locator=locator, text=value)
+                else:
+                    self.logger.warning(f'Field "{field}" is defined in locator map but missing in user_data')
+        except Exception as e:
+            self.logger.error(f'Failed to fill out the form field! Error: {e}')
+            raise Exception('An error occurred while filling form fields.')
+
+    def get_welcome_message(self) -> str:
+        """
+        Retrieves the displayed welcome message that is presented after the action is performed successfully.
+
+        :return: The welcome message.
+        """
+        return self.find_element(locator=self.WELCOME_TITLE).text
