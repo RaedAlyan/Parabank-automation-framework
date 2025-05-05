@@ -13,19 +13,19 @@ from utils.logger import Logger
 class RegisterPage(BasePage):
     """Page Object Model for user registration page"""
 
-    FIRST_NAME_INPUT: tuple[str, str] = (By.ID, 'customer.firstName')
-    LAST_NAME_INPUT: tuple[str, str] = (By.ID, 'customer.lastName')
-    ADDRESS_INPUT: tuple[str, str] = (By.ID, 'customer.address.street')
-    CITY_INPUT: tuple[str, str] = (By.ID, 'customer.address.city')
-    STATE_INPUT: tuple[str, str] = (By.ID, 'customer.address.state')
-    ZIP_CODE_INPUT: tuple[str, str] = (By.ID, 'customer.address.zipCode')
-    PHONE_INPUT: tuple[str, str] = (By.ID, 'customer.phoneNumber')
-    SSN_INPUT: tuple[str, str] = (By.ID, 'customer.ssn')
-    USERNAME_INPUT: tuple[str, str] = (By.ID, 'customer.username')
-    PASSWORD_INPUT: tuple[str, str] = (By.ID, 'customer.password')
-    CONFIRM_PASSWORD_INPUT: tuple[str, str] = (By.ID, 'repeatedPassword')
-    REGISTER_BUTTON: tuple[str, str] = (By.CSS_SELECTOR, 'input[value="Register"]')
-    POPUP_ERROR_MESSAGES: dict[str, tuple[str, str]] = {
+    FIRST_NAME_INPUT = (By.ID, 'customer.firstName')
+    LAST_NAME_INPUT = (By.ID, 'customer.lastName')
+    ADDRESS_INPUT = (By.ID, 'customer.address.street')
+    CITY_INPUT = (By.ID, 'customer.address.city')
+    STATE_INPUT = (By.ID, 'customer.address.state')
+    ZIP_CODE_INPUT = (By.ID, 'customer.address.zipCode')
+    PHONE_INPUT = (By.ID, 'customer.phoneNumber')
+    SSN_INPUT = (By.ID, 'customer.ssn')
+    USERNAME_INPUT = (By.ID, 'customer.username')
+    PASSWORD_INPUT = (By.ID, 'customer.password')
+    CONFIRM_PASSWORD_INPUT = (By.ID, 'repeatedPassword')
+    REGISTER_BUTTON = (By.CSS_SELECTOR, 'input[value="Register"]')
+    POPUP_ERROR_MESSAGES = {
         'first_name': (By.ID, 'customer.firstName.errors'),
         'last_name': (By.ID, 'customer.lastName.errors'),
         'address': (By.ID, 'customer.address.street.errors'),

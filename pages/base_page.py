@@ -23,7 +23,7 @@ sys.path.append(str(root_path))
 class BasePage:
     """Base class for all page objects in the framework"""
 
-    WELCOME_TITLE: tuple[str, str] = (By.CSS_SELECTOR, 'h1[class="title"]')
+    WELCOME_TITLE = (By.CSS_SELECTOR, 'h1[class="title"]')
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
@@ -47,7 +47,7 @@ class BasePage:
             return web_element
         except TimeoutException as e:
             self.logger.error(f'Timeout! The WebElement with locator: {locator} not visible within {timeout} seconds.')
-            raise TimeoutException(f"Visible WebElement not found: {locator}") from e
+            raise TimeoutException(f'Visible WebElement not found: {locator}') from e
 
     def find_elements(self, locator: tuple[str, str], timeout: int = 10) -> list[WebElement]:
         """
