@@ -25,7 +25,6 @@ class RegisterPage(BasePage):
     PASSWORD_INPUT: tuple[str, str] = (By.ID, 'customer.password')
     CONFIRM_PASSWORD_INPUT: tuple[str, str] = (By.ID, 'repeatedPassword')
     REGISTER_BUTTON: tuple[str, str] = (By.CSS_SELECTOR, 'input[value="Register"]')
-    WELCOME_TITLE: tuple[str, str] = (By.CSS_SELECTOR, 'h1[class="title"]')
     POPUP_ERROR_MESSAGES: dict[str, tuple[str, str]] = {
         'first_name': (By.ID, 'customer.firstName.errors'),
         'last_name': (By.ID, 'customer.lastName.errors'),
@@ -51,53 +50,25 @@ class RegisterPage(BasePage):
                           zip_code, phone, ssn, username, password, confirm_password.
         :raises Exception: When an error occurs while trying to register and submit the form.
         """
+        locators_mapper = {
+            'first_name': self.FIRST_NAME_INPUT,
+            'last_name': self.LAST_NAME_INPUT,
+            'address': self.ADDRESS_INPUT,
+            'city': self.CITY_INPUT,
+            'state': self.STATE_INPUT,
+            'zip_code': self.ZIP_CODE_INPUT,
+            'phone': self.PHONE_INPUT,
+            'ssn': self.SSN_INPUT,
+            'username': self.USERNAME_INPUT,
+            'password': self.PASSWORD_INPUT,
+            'confirm_password': self.CONFIRM_PASSWORD_INPUT,
+        }
         try:
-            if 'first_name' in user_data:
-                self.logger.info(f'Sending the first name "{user_data['first_name']}" to the registration form')
-                self.send_keys(locator=self.FIRST_NAME_INPUT, text=user_data['first_name'])
-            if 'last_name' in user_data:
-                self.logger.info(f'Sending the last name "{user_data['last_name']}" to the registration form')
-                self.send_keys(locator=self.LAST_NAME_INPUT, text=user_data['last_name'])
-            if 'address' in user_data:
-                self.logger.info(f'Sending the address "{user_data['address']}" to the registration form')
-                self.send_keys(locator=self.ADDRESS_INPUT, text=user_data['address'])
-            if 'city' in user_data:
-                self.logger.info(f'Sending the city "{user_data['city']}" to the registration form')
-                self.send_keys(locator=self.CITY_INPUT, text=user_data['city'])
-            if 'state' in user_data:
-                self.logger.info(f'Sending the state "{user_data['state']}" to the registration form')
-                self.send_keys(locator=self.STATE_INPUT, text=user_data['state'])
-            if 'zip_code' in user_data:
-                self.logger.info(f'Sending the zip code "{user_data['zip_code']}" to the registration form')
-                self.send_keys(locator=self.ZIP_CODE_INPUT, text=user_data['zip_code'])
-            if 'phone' in user_data:
-                self.logger.info(f'Sending the phone number "{user_data['phone']}" to the registration form')
-                self.send_keys(locator=self.PHONE_INPUT, text=user_data['phone'])
-            if 'ssn' in user_data:
-                self.logger.info(f'Sending the ssn "{user_data['ssn']}" to the registration form')
-                self.send_keys(locator=self.SSN_INPUT, text=user_data['ssn'])
-            if 'username' in user_data:
-                self.logger.info(f'Sending the username "{user_data['username']}" to the registration form')
-                self.send_keys(locator=self.USERNAME_INPUT, text=user_data['username'])
-            if 'password' in user_data:
-                self.logger.info('Sending the password to the registration form')
-                self.send_keys(locator=self.PASSWORD_INPUT, text=user_data['password'])
-            if 'confirm_password' in user_data:
-                self.logger.info('Sending the confirmation password to the registration form')
-                self.send_keys(locator=self.CONFIRM_PASSWORD_INPUT, text=user_data['confirm_password'])
+            self.fill_form_fields(user_data=user_data, locators_mapper=locators_mapper)
             self.click(locator=self.REGISTER_BUTTON)
         except Exception as e:
             self.logger.error(f'Failed to register the user! Error: {e}')
             raise Exception('An error occurred while trying to register the user!') from e
-
-    def get_welcome_message(self) -> str:
-        """
-        Retrieves the displayed welcome message that is presented after the user is registered successfully.
-
-        :return: The welcome message.
-        """
-        welcome_element = self.find_element(locator=self.WELCOME_TITLE)
-        return welcome_element.text
 
     def get_popup_error_message(self, missing_required_input_field: str) -> str:
         """
