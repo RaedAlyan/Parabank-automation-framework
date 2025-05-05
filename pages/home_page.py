@@ -12,11 +12,11 @@ from utils.logger import Logger
 
 class HomePage(BasePage):
     """Page Object Model for home page"""
-    USERNAME_INPUT: tuple[str, str] = (By.CSS_SELECTOR, 'input[name="username"]')
-    PASSWORD_INPUT: tuple[str, str] = (By.CSS_SELECTOR, 'input[name="password"]')
-    LOGIN_BUTTON: tuple[str, str] = (By.CSS_SELECTOR, 'input[class="button"]')
-    USER_FULL_NAME: tuple[str, str] = (By.CSS_SELECTOR, 'p[class="smallText"]')
-    MAIN_TITLE: tuple[str, str] = (By.XPATH, '//div[@id="showOverview"]//child::h1[@class="title"]')
+    USERNAME_INPUT = (By.CSS_SELECTOR, 'input[name="username"]')
+    PASSWORD_INPUT = (By.CSS_SELECTOR, 'input[name="password"]')
+    LOGIN_BUTTON = (By.CSS_SELECTOR, 'input[class="button"]')
+    USER_FULL_NAME = (By.CSS_SELECTOR, 'p[class="smallText"]')
+    MAIN_TITLE = (By.XPATH, '//div[@id="showOverview"]//child::h1[@class="title"]')
 
     def __init__(self, driver):
         super().__init__(driver)
